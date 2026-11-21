@@ -19,9 +19,14 @@ TEXT = (
 
 
 def main() -> None:
+    if not 1 <= len(TEXT) <= 280 or not TEXT.strip():
+        raise ValueError("entry text must be 1-280 code points, not only whitespace")
     output_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
     output_dir.mkdir(parents=True, exist_ok=True)
-    (output_dir / "entry.txt").write_text(TEXT, encoding="utf-8")
+    target = output_dir / "entry.txt"
+    tmp = target.with_suffix(".tmp")
+    tmp.write_text(TEXT, encoding="utf-8")
+    os.replace(tmp, target)
 
 
 if __name__ == "__main__":
